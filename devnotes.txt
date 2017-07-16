@@ -1,0 +1,14 @@
+Dev
+
+  This is a pet project and hence no authentication
+  or security will be needed since it will not be exposed
+  for public use.
+
+
+  - Client
+    * D
+  - Server
+
+    * Write json models
+    * Go JSON req and resp
+    * Go Mongo Db server
