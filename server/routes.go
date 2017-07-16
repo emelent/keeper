@@ -4,10 +4,11 @@ import "net/http"
 
 //Route route struct
 type Route struct {
-	Name    string
-	Method  string
-	Path    string
-	Handler http.HandlerFunc
+	Name       string
+	Method     string
+	Path       string
+	Handler    http.HandlerFunc
+	Middleware []Middleware
 }
 
 var routes = []Route{

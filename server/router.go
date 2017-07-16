@@ -1,9 +1,15 @@
 package main
 
 import (
-  "net/http"
-  "github.com/gorilla/mux"
+	"net/http"
+
+	"github.com/gorilla/mux"
 )
+
+var globalMiddleware = []Middleware{
+	Logger,
+	JSONMiddleware,
+}
 
 //NewRouter creates a new router
 func NewRouter() http.Handler {
@@ -14,7 +20,7 @@ func NewRouter() http.Handler {
 			Methods(route.Method).
 			Path(route.Path).
 			Name(route.Name).
-			Handler(route.Handler)
+			Handler(ApplyMiddleware(route.Handler, route.Middleware))
 	}
-	return ApplyMiddleware(router, []Middleware{JSONMiddleware, Logger})
+	return ApplyMiddleware(router, globalMiddleware)
 }
