@@ -2,10 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
-	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 
 	mgo "gopkg.in/mgo.v2"
@@ -46,7 +44,6 @@ func MakeGetProductsHandler(dbSession interface{}) func(http.ResponseWriter, *ht
 		db := dbSession.(*mgo.Session).Copy()
 		defer db.Close()
 		var products []*Product
-		fmt.Println("Context:", context.Get(r, "mooka"))
 		if err := db.DB(dbName).C(collectionNameProducts).
 			Find(nil).Sort("-name").All(&products); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
