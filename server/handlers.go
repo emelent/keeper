@@ -1,49 +1,81 @@
 package main
 
 import (
-  "encoding/json"
-  "net/http"
+	"encoding/json"
+	"fmt"
+	"net/http"
+
+	"github.com/gorilla/context"
+	"github.com/gorilla/mux"
+
+	mgo "gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
-//SeedProducts function
-func SeedProducts(){
-
-  products = append(products, Product{
-    ID: RandomString(IDLength),
-    Name: "Socks",
-    Brand: "Magic Feet",
-    Category: "Footwear",
-    Quantity: 20,
-    Sell: 15.5,
-    Buy: 12})
+func jsonEncode(w http.ResponseWriter, v interface{}) {
+	if err := json.NewEncoder(w).Encode(v); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
+//MakeCreateProductHandler endpoint
+func MakeCreateProductHandler(dbSession interface{}) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		db := dbSession.(*mgo.Session).Copy()
+		defer db.Close()
 
-//CreateProduct endpoint
-func CreateProduct(w http.ResponseWriter, r *http.Request) {
-	var prod Product
-	_ = json.NewDecoder(r.Body).Decode(&prod)
-  prod.ID = RandomString(IDLength)
-	products = append(products, prod)
-	json.NewEncoder(w).Encode(products)
+		var p Product
+		if err := json.NewDecoder(r.Body).Decode(&p); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		p.ID = bson.NewObjectId()
+
+		if err := db.DB(dbName).C(collectionNameProducts).Insert(&p); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		jsonEncode(w, "Product successfully created.")
+	}
 }
 
-//GetProducts endpoint
-func GetProducts(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(products)
+//MakeGetProductsHandler endpoint
+func MakeGetProductsHandler(dbSession interface{}) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		db := dbSession.(*mgo.Session).Copy()
+		defer db.Close()
+		var products []*Product
+		fmt.Println("Context:", context.Get(r, "mooka"))
+		if err := db.DB(dbName).C(collectionNameProducts).
+			Find(nil).Sort("-name").All(&products); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		jsonEncode(w, products)
+	}
 }
 
-//UpdateProduct endpoint
-func UpdateProduct(w http.ResponseWriter, r *http.Request){
-  //params := mux.Vars(r)
-  var newProd Product
-  _ = json.NewDecoder(r.Body).Decode(&newProd);
-  for index, prod := range products{
-    if prod.ID == newProd.ID {
-      products[index] = newProd
-      break
-    }
-  }
+//MakeUpdateProductHandler endpoint
+func MakeUpdateProductHandler(dbSession interface{}) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		db := dbSession.(*mgo.Session).Copy()
+		defer db.Close()
 
-  json.NewEncoder(w).Encode(newProd)
+		params := mux.Vars(r)
+		productID := bson.ObjectIdHex(params["productID"])
+		var p Product
+		if err := json.NewDecoder(r.Body).Decode(&p); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		p.ID = productID
+		if err := db.DB(dbName).C(collectionNameProducts).UpdateId(productID, p); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		jsonEncode(w, "Update successful.")
+	}
 }

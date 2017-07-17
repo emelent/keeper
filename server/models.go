@@ -1,37 +1,40 @@
 package main
 
+import (
+	"time"
+
+	"gopkg.in/mgo.v2/bson"
+)
+
 //IDLength length of id
 const IDLength = 10
 
 //Product is a model for a typical store product
 type Product struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	Brand    string `json:"brand"`
-	Category string `json:"category"`
+	ID       bson.ObjectId `json:"id" bson:"_id"`
+	Name     string        `json:"name" bson:"name"`
+	Brand    string        `json:"brand"  bson:"brand"`
+	Category string        `json:"category" bson:"category"`
 
-	Quantity int `json:"quantity"`
+	Quantity int `json:"quantity" bson:"quantity"`
 
-	Sell float32 `json:"sell"`
-	Buy  float32 `json:"buy"`
+	Sell float32 `json:"sell" bson:"sell"`
+	Buy  float32 `json:"buy" bson:"buy"`
 }
 
 //ReceiptItem models either the purchasing of a stock item
 //or the selling of a stock item
 type ReceiptItem struct {
-	ProductID string `json:"productID"`
-	Quantity  int    `json:"quantity"`
-	Sale      bool   `json:"sale"`
+	ProductID bson.ObjectId `json:"productID" bson:"_id"`
+	Quantity  int           `json:"quantity" bson:"quantity"`
+	Sale      bool          `json:"sale" bson:"sale"`
 }
 
 //Receipt models the a list of items bought or sold
 type Receipt struct {
-	ID   string `json:"id"`
-	Date string `json:"date"`
+	ID   bson.ObjectId `json:"id" bson:"_id"`
+	Date time.Time     `json:"date" bson:"date"`
 
-	Sale  bool          `json:"sale"`
-	Items []ReceiptItem `json:"items"`
+	Sale  bool          `json:"sale" bson:"sale"`
+	Items []ReceiptItem `json:"items" bson:"items"`
 }
-
-//mock database with products array
-var products []Product

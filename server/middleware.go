@@ -17,12 +17,12 @@ func JSONMiddleware(h http.Handler) http.Handler {
 	})
 }
 
-//Logger logs each request
-func Logger(inner http.Handler) http.Handler {
+//LoggerMiddleware logs each request
+func LoggerMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 
-		inner.ServeHTTP(w, r)
+		h.ServeHTTP(w, r)
 
 		log.Printf(
 			"%s %s %s",
@@ -30,6 +30,14 @@ func Logger(inner http.Handler) http.Handler {
 			r.RequestURI,
 			time.Since(start),
 		)
+	})
+}
+
+//CorsMiddleware allow Cors
+func CorsMiddleware(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Allow-Cross-Origin", "*")
+		h.ServeHTTP(w, r)
 	})
 }
 

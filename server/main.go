@@ -5,14 +5,21 @@ import (
 	"math/rand"
 	"net/http"
 	"time"
+
+	mgo "gopkg.in/mgo.v2"
 )
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
-	SeedProducts()
-	router := NewRouter()
+
+	dbSession, err := mgo.Dial(dbServer)
+	if err != nil {
+		log.Fatal("Cannot  dial mgo")
+	}
+	defer dbSession.Close()
+	router := NewRouter(dbSession)
 	port := ":8999"
-	log.Println("Serving on 0.0.0.0", port)
+	log.Printf("Serving on 0.0.0.0 %s\n\n", port)
 	log.Fatal(http.ListenAndServe(port, router))
 
 }
