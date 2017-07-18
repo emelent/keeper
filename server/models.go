@@ -9,6 +9,12 @@ import (
 //IDLength length of id
 const IDLength = 10
 
+//Validator is an interface that's used to validate a model struct
+//before it is stored(in the database)
+type Validator interface {
+	OK() error
+}
+
 //Product is a model for a typical store product
 type Product struct {
 	ID       bson.ObjectId `json:"id" bson:"_id"`
@@ -20,6 +26,38 @@ type Product struct {
 
 	Sell float32 `json:"sell" bson:"sell"`
 	Buy  float32 `json:"buy" bson:"buy"`
+}
+
+//NewProduct is used as a model for validating product creation
+type NewProduct struct {
+	Name     string `json:"name" bson:"name"`
+	Brand    string `json:"brand"  bson:"brand"`
+	Category string `json:"category" bson:"category"`
+
+	Quantity int `json:"quantity" bson:"quantity"`
+
+	Sell float32 `json:"sell" bson:"sell"`
+	Buy  float32 `json:"buy" bson:"buy"`
+}
+
+//OK validates NewProduct
+func (p NewProduct) OK() error {
+	if p.Name == "" {
+		return MissingFieldError{"name"}
+	}
+	if p.Brand == "" {
+		return MissingFieldError{"brand"}
+	}
+	if p.Category == "" {
+		return MissingFieldError{"category"}
+	}
+	if p.Sell == 0 {
+		return MissingFieldError{"sell"}
+	}
+	if p.Buy == 0 {
+		return MissingFieldError{"buy"}
+	}
+	return nil
 }
 
 //ReceiptItem models either the purchasing of a stock item

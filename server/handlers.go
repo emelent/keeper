@@ -16,6 +16,13 @@ func jsonEncode(w http.ResponseWriter, v interface{}) {
 	}
 }
 
+func jsonDecode(r *http.Request, v Validator) error {
+	if err := json.NewDecoder(r.Body).Decode(v); err != nil {
+		return nil
+	}
+	return v.OK()
+}
+
 //MakeCreateProductHandler endpoint
 func MakeCreateProductHandler(dbSession interface{}) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -23,7 +30,8 @@ func MakeCreateProductHandler(dbSession interface{}) func(http.ResponseWriter, *
 		defer db.Close()
 
 		var p Product
-		if err := json.NewDecoder(r.Body).Decode(&p); err != nil {
+		var np NewProduct
+		if err := jsonDecode(r, np); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -34,7 +42,7 @@ func MakeCreateProductHandler(dbSession interface{}) func(http.ResponseWriter, *
 			return
 		}
 
-		jsonEncode(w, "Product successfully created.")
+		jsonEncode(w, p)
 	}
 }
 
@@ -73,6 +81,6 @@ func MakeUpdateProductHandler(dbSession interface{}) func(http.ResponseWriter, *
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		jsonEncode(w, "Update successful.")
+		jsonEncode(w, p)
 	}
 }
