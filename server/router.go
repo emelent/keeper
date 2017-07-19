@@ -8,14 +8,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var globalMiddleware = []Middleware{
-	LoggerMiddleware,
-	JSONMiddleware,
-	CorsMiddleware,
-}
-
 //NewRouter creates a new router
-func NewRouter(dbSession *mgo.Session) http.Handler {
+func NewRouter(dbSession *mgo.Session, middleware ...Middleware) http.Handler {
 	router := mux.NewRouter()
 
 	for _, route := range routes {
@@ -30,5 +24,5 @@ func NewRouter(dbSession *mgo.Session) http.Handler {
 			Name(route.Name).
 			Handler(handler)
 	}
-	return ApplyMiddleware(router, globalMiddleware)
+	return ApplyMiddleware(router, middleware)
 }

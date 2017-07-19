@@ -17,7 +17,7 @@ func main() {
 		log.Fatal("Cannot  dial mgo")
 	}
 	defer dbSession.Close()
-	router := NewRouter(dbSession)
+	router := NewRouter(dbSession, LoggerMiddleware, JSONMiddleware, CorsMiddleware)
 	port := ":8999"
 	log.Printf("Serving on 0.0.0.0 %s\n\n", port)
 	log.Fatal(http.ListenAndServe(port, router))
