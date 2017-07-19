@@ -20,18 +20,18 @@ var routes = []Route{
 		Name:   "New Product",
 		Method: "POST",
 		Path:   "/products/new",
-		Maker:  MakeCreateProductHandler,
+		Maker:  NewProductHandler,
 	},
 	Route{
 		Name:   "Get Products",
 		Method: "GET",
 		Path:   "/products/all",
-		Maker:  MakeGetProductsHandler,
+		Maker:  AllProductsHandler,
 	},
 	Route{
 		Name:   "Update Product",
 		Method: "PUT",
 		Path:   "/products/{productID}",
-		Maker:  MakeUpdateProductHandler,
+		Maker:  UpdateProductHandler,
 	},
 }

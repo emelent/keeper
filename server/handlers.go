@@ -23,8 +23,8 @@ func jsonDecode(r *http.Request, v Validator) error {
 	return v.OK()
 }
 
-//MakeCreateProductHandler endpoint
-func MakeCreateProductHandler(dbSession interface{}) func(http.ResponseWriter, *http.Request) {
+//NewProductHandler endpoint
+func NewProductHandler(dbSession interface{}) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		db := dbSession.(*mgo.Session).Copy()
 		defer db.Close()
@@ -53,8 +53,8 @@ func MakeCreateProductHandler(dbSession interface{}) func(http.ResponseWriter, *
 	}
 }
 
-//MakeGetProductsHandler endpoint
-func MakeGetProductsHandler(dbSession interface{}) func(http.ResponseWriter, *http.Request) {
+//AllProductsHandler endpoint
+func AllProductsHandler(dbSession interface{}) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		db := dbSession.(*mgo.Session).Copy()
 		defer db.Close()
@@ -69,8 +69,8 @@ func MakeGetProductsHandler(dbSession interface{}) func(http.ResponseWriter, *ht
 	}
 }
 
-//MakeUpdateProductHandler endpoint
-func MakeUpdateProductHandler(dbSession interface{}) func(http.ResponseWriter, *http.Request) {
+//UpdateProductHandler endpoint
+func UpdateProductHandler(dbSession interface{}) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		db := dbSession.(*mgo.Session).Copy()
 		defer db.Close()
