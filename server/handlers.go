@@ -29,11 +29,18 @@ func MakeCreateProductHandler(dbSession interface{}) func(http.ResponseWriter, *
 		db := dbSession.(*mgo.Session).Copy()
 		defer db.Close()
 
-		var p Product
 		var np NewProduct
-		if err := jsonDecode(r, np); err != nil {
+		if err := jsonDecode(r, &np); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
+		}
+		p := Product{
+			Name:     np.Name,
+			Brand:    np.Brand,
+			Buy:      np.Buy,
+			Sell:     np.Sell,
+			Category: np.Category,
+			Quantity: np.Quantity,
 		}
 		p.ID = bson.NewObjectId()
 
