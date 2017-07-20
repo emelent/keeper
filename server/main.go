@@ -7,6 +7,7 @@ import (
 	"time"
 
 	config "./config"
+	db "./database"
 	mware "./middleware"
 	routing "./routing"
 	mgo "gopkg.in/mgo.v2"
@@ -19,8 +20,10 @@ func main() {
 	if err != nil {
 		log.Fatal("Cannot  dial mgo")
 	}
-	defer dbSession.Close()
-	router := routing.NewRouter(dbSession,
+	crud := &db.CRUD{}
+	crud.Session = dbSession
+	defer crud.Close()
+	router := routing.NewRouter(crud,
 		mware.LoggerMiddleware,
 		mware.JSONMiddleware,
 		mware.CorsMiddleware,

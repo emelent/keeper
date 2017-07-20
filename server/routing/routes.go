@@ -3,12 +3,13 @@ package routing
 import (
 	"net/http"
 
+	db "../database"
 	handler "../handlers"
 	mware "../middleware"
 )
 
 //HandlerMaker makes a handler function
-type HandlerMaker func(interface{}) func(http.ResponseWriter, *http.Request)
+type HandlerMaker func(*db.CRUD) func(http.ResponseWriter, *http.Request)
 
 //Route route struct
 type Route struct {

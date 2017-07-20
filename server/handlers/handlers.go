@@ -6,12 +6,10 @@ import (
 
 	"github.com/gorilla/mux"
 
-	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
+	db "../database"
 	models "../models"
-
-	config "../config"
 )
 
 const productsCollection = "products"
@@ -30,10 +28,9 @@ func jsonDecode(r *http.Request, v models.Validator) error {
 }
 
 //NewProductHandler endpoint
-func NewProductHandler(dbSession interface{}) func(http.ResponseWriter, *http.Request) {
+func NewProductHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		db := dbSession.(*mgo.Session).Copy()
-		defer db.Close()
+		defer crud.CloseCopy()
 
 		var np models.NewProduct
 		if err := jsonDecode(r, &np); err != nil {
@@ -50,7 +47,7 @@ func NewProductHandler(dbSession interface{}) func(http.ResponseWriter, *http.Re
 		}
 		p.ID = bson.NewObjectId()
 
-		if err := db.DB(config.DbName).C(productsCollection).Insert(&p); err != nil {
+		if err := crud.Insert(productsCollection, p); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -60,13 +57,12 @@ func NewProductHandler(dbSession interface{}) func(http.ResponseWriter, *http.Re
 }
 
 //AllProductsHandler endpoint
-func AllProductsHandler(dbSession interface{}) func(http.ResponseWriter, *http.Request) {
+func AllProductsHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		db := dbSession.(*mgo.Session).Copy()
-		defer db.Close()
-		var products []*models.Product
-		if err := db.DB(config.DbName).C(productsCollection).
-			Find(nil).Sort("-name").All(&products); err != nil {
+		defer crud.CloseCopy()
+
+		products, err := crud.FindAll(productsCollection, nil)
+		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -76,10 +72,9 @@ func AllProductsHandler(dbSession interface{}) func(http.ResponseWriter, *http.R
 }
 
 //UpdateProductHandler endpoint
-func UpdateProductHandler(dbSession interface{}) func(http.ResponseWriter, *http.Request) {
+func UpdateProductHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		db := dbSession.(*mgo.Session).Copy()
-		defer db.Close()
+		defer crud.CloseCopy()
 
 		params := mux.Vars(r)
 		productID := bson.ObjectIdHex(params["productID"])
@@ -90,7 +85,7 @@ func UpdateProductHandler(dbSession interface{}) func(http.ResponseWriter, *http
 		}
 
 		p.ID = productID
-		if err := db.DB(config.DbName).C(productsCollection).UpdateId(productID, p); err != nil {
+		if err := crud.UpdateID(productsCollection, productID, p); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
