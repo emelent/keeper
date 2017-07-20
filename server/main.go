@@ -16,12 +16,11 @@ import (
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	dbSession, err := mgo.Dial(config.DbHost)
+	mongoSession, err := mgo.Dial(config.DbHost)
 	if err != nil {
 		log.Fatal("Cannot  dial mgo")
 	}
-	crud := &db.CRUD{}
-	crud.Session = dbSession
+	crud := db.NewCRUD(mongoSession)
 	defer crud.Close()
 	router := routing.NewRouter(crud,
 		mware.LoggerMiddleware,
