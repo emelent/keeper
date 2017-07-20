@@ -52,6 +52,7 @@ func NewProductHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
+		w.WriteHeader(http.StatusCreated)
 		jsonEncode(w, p)
 	}
 }

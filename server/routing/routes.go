@@ -20,7 +20,8 @@ type Route struct {
 	Middleware []mware.Middleware
 }
 
-var routes = map[string]Route{
+//Routes map of API routes
+var Routes = map[string]Route{
 	"NewProduct": Route{
 		Method: "POST",
 		Path:   "/products/new",

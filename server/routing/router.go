@@ -13,7 +13,7 @@ import (
 func NewRouter(crud *db.CRUD, middleware ...mware.Middleware) http.Handler {
 	router := mux.NewRouter()
 
-	for name, route := range routes {
+	for name, route := range Routes {
 		h := route.Handler
 		if h == nil && route.Maker != nil {
 			h = route.Maker(crud)

@@ -1,68 +1,79 @@
 package main
 
 import (
-	"fmt"
+	"bytes"
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
 
-	mgo "gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/dbtest"
+	db "./database"
+	mware "./middleware"
+	models "./models"
+	routing "./routing"
 )
 
-var Server dbtest.DBServer
-var Session *mgo.Session
-
-var middleware = []Middleware{
-	JSONMiddleware,
+var middleware = []mware.Middleware{
+	mware.JSONMiddleware,
 }
+
+var crud *db.CRUD
 
 // TestMain wraps all tests with the needed initialized mock DB and fixtures
 func TestMain(m *testing.M) {
-	// The tempdir is created so MongoDB has a location to store its files.
-	// Contents are wiped once the server stops
-	fmt.Println("we do main now")
-	tempDir, _ := ioutil.TempDir(".", "testing")
-	fmt.Println(tempDir)
-	Server.SetPath(tempDir)
-
-	// My main session var is now set to the temporary MongoDB instance
-	Session = Server.Session()
-
-	// Make sure to insert my fixtures
-	// insertFixtures()
+	// Set up
+	crud = db.NewCRUD(nil)
 
 	// Run the test suite
 	retCode := m.Run()
 
-	// Make sure we DropDatabase so we make absolutely sure nothing is left or locked while wiping the data and
-	// close session
-	Session.DB(dbName).DropDatabase()
-	Session.Close()
+	// Clean up
+	crud.Close()
 
-	// Stop shuts down the temporary server and removes data on disk.
-	Server.Stop()
-	fmt.Println("We R done")
 	// call with result of m.Run()
 	os.Exit(retCode)
 }
 
 func TestNewProductEndpoint(t *testing.T) {
-	route := routes["NewProduct"]
-	h := http.HandlerFunc(route.Maker(Session))
-	handler := ApplyMiddleware(h, route.Middleware)
-	handler = ApplyMiddleware(handler, middleware)
+	route := routing.Routes["NewProduct"]
+	h := http.HandlerFunc(route.Maker(crud))
+	handler := mware.ApplyMiddleware(h, route.Middleware)
+	handler = mware.ApplyMiddleware(handler, middleware)
 
-	req := httptest.NewRequest("POST", route.Path, nil)
+	prod := models.NewProduct{
+		Name:     "Yuka Socks",
+		Brand:    "Magic Feet",
+		Category: "Footwear",
+		Quantity: 20,
+		Sell:     55.5,
+		Buy:      35,
+	}
+
+	prodJSON, _ := json.Marshal(prod)
+	req := httptest.NewRequest("POST", route.Path, bytes.NewBuffer(prodJSON))
+
+	req.Header.Add("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, req)
 
 	resp := w.Result()
 	body, _ := ioutil.ReadAll(resp.Body)
+	var respJSON models.Product
 
-	fmt.Println(resp.StatusCode)
-	fmt.Println(resp.Header.Get("Content-Type"))
-	fmt.Println(string(body))
+	_ = json.Unmarshal(body, &respJSON)
+
+	contentType := "application/json"
+	if resp.Header.Get("Content-Type") != contentType {
+		t.Errorf("Invalid Content-Type, expected '%s' got '%s'", contentType, resp.Header.Get("Content-Type"))
+	}
+	if respJSON.Name != prod.Name {
+		t.Error("Response does not match request data")
+	}
+
+	if resp.StatusCode != http.StatusCreated {
+		t.Errorf("Invalid status code, expected '%d' got '%d'", http.StatusCreated, resp.StatusCode)
+	}
+
 }

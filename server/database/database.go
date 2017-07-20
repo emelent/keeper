@@ -6,5 +6,6 @@ import mgo "gopkg.in/mgo.v2"
 func NewCRUD(session *mgo.Session) *CRUD {
 	crud := &CRUD{}
 	crud.Session = session
+	crud.TempStorage = make(map[string][]interface{})
 	return crud
 }
