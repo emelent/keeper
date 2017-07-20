@@ -1,4 +1,4 @@
-package main
+package routing
 
 import (
 	"net/http"
@@ -6,10 +6,12 @@ import (
 	mgo "gopkg.in/mgo.v2"
 
 	"github.com/gorilla/mux"
+
+	mware "../middleware"
 )
 
 //NewRouter creates a new router
-func NewRouter(dbSession *mgo.Session, middleware ...Middleware) http.Handler {
+func NewRouter(dbSession *mgo.Session, middleware ...mware.Middleware) http.Handler {
 	router := mux.NewRouter()
 
 	for name, route := range routes {
@@ -17,12 +19,12 @@ func NewRouter(dbSession *mgo.Session, middleware ...Middleware) http.Handler {
 		if h == nil && route.Maker != nil {
 			h = route.Maker(dbSession)
 		}
-		handler := ApplyMiddleware(h, route.Middleware)
+		handler := mware.ApplyMiddleware(h, route.Middleware)
 		router.
 			Methods(route.Method).
 			Path(route.Path).
 			Name(name).
 			Handler(handler)
 	}
-	return ApplyMiddleware(router, middleware)
+	return mware.ApplyMiddleware(router, middleware)
 }

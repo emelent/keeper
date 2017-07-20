@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
@@ -8,7 +8,13 @@ import (
 
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+
+	models "../models"
+
+	config "../config"
 )
+
+const productsCollection = "products"
 
 func jsonEncode(w http.ResponseWriter, v interface{}) {
 	if err := json.NewEncoder(w).Encode(v); err != nil {
@@ -16,7 +22,7 @@ func jsonEncode(w http.ResponseWriter, v interface{}) {
 	}
 }
 
-func jsonDecode(r *http.Request, v Validator) error {
+func jsonDecode(r *http.Request, v models.Validator) error {
 	if err := json.NewDecoder(r.Body).Decode(v); err != nil {
 		return nil
 	}
@@ -29,12 +35,12 @@ func NewProductHandler(dbSession interface{}) func(http.ResponseWriter, *http.Re
 		db := dbSession.(*mgo.Session).Copy()
 		defer db.Close()
 
-		var np NewProduct
+		var np models.NewProduct
 		if err := jsonDecode(r, &np); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		p := Product{
+		p := models.Product{
 			Name:     np.Name,
 			Brand:    np.Brand,
 			Buy:      np.Buy,
@@ -44,7 +50,7 @@ func NewProductHandler(dbSession interface{}) func(http.ResponseWriter, *http.Re
 		}
 		p.ID = bson.NewObjectId()
 
-		if err := db.DB(dbName).C(collectionNameProducts).Insert(&p); err != nil {
+		if err := db.DB(config.DbName).C(productsCollection).Insert(&p); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -58,8 +64,8 @@ func AllProductsHandler(dbSession interface{}) func(http.ResponseWriter, *http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		db := dbSession.(*mgo.Session).Copy()
 		defer db.Close()
-		var products []*Product
-		if err := db.DB(dbName).C(collectionNameProducts).
+		var products []*models.Product
+		if err := db.DB(config.DbName).C(productsCollection).
 			Find(nil).Sort("-name").All(&products); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -77,14 +83,14 @@ func UpdateProductHandler(dbSession interface{}) func(http.ResponseWriter, *http
 
 		params := mux.Vars(r)
 		productID := bson.ObjectIdHex(params["productID"])
-		var p Product
+		var p models.Product
 		if err := json.NewDecoder(r.Body).Decode(&p); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		p.ID = productID
-		if err := db.DB(dbName).C(collectionNameProducts).UpdateId(productID, p); err != nil {
+		if err := db.DB(config.DbName).C(productsCollection).UpdateId(productID, p); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}

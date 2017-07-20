@@ -1,6 +1,11 @@
-package main
+package routing
 
-import "net/http"
+import (
+	"net/http"
+
+	handler "../handlers"
+	mware "../middleware"
+)
 
 //HandlerMaker makes a handler function
 type HandlerMaker func(interface{}) func(http.ResponseWriter, *http.Request)
@@ -11,23 +16,23 @@ type Route struct {
 	Path       string
 	Handler    http.HandlerFunc
 	Maker      HandlerMaker
-	Middleware []Middleware
+	Middleware []mware.Middleware
 }
 
 var routes = map[string]Route{
 	"NewProduct": Route{
 		Method: "POST",
 		Path:   "/products/new",
-		Maker:  NewProductHandler,
+		Maker:  handler.NewProductHandler,
 	},
 	"AllProducts": Route{
 		Method: "GET",
 		Path:   "/products/all",
-		Maker:  AllProductsHandler,
+		Maker:  handler.AllProductsHandler,
 	},
 	"UpdateProduct": Route{
 		Method: "PUT",
 		Path:   "/products/{productID}",
-		Maker:  UpdateProductHandler,
+		Maker:  handler.UpdateProductHandler,
 	},
 }

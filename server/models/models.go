@@ -1,8 +1,9 @@
-package main
+package models
 
 import (
 	"time"
 
+	e "../errors"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -43,19 +44,19 @@ type NewProduct struct {
 //OK validates NewProduct
 func (p NewProduct) OK() error {
 	if p.Name == "" {
-		return MissingFieldError{"name"}
+		return e.MissingFieldError{"name"}
 	}
 	if p.Brand == "" {
-		return MissingFieldError{"brand"}
+		return e.MissingFieldError{"brand"}
 	}
 	if p.Category == "" {
-		return MissingFieldError{"category"}
+		return e.MissingFieldError{"category"}
 	}
 	if p.Sell == 0 {
-		return MissingFieldError{"sell"}
+		return e.MissingFieldError{"sell"}
 	}
 	if p.Buy == 0 {
-		return MissingFieldError{"buy"}
+		return e.MissingFieldError{"buy"}
 	}
 	return nil
 }
