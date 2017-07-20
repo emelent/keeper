@@ -7,7 +7,6 @@ type HandlerMaker func(interface{}) func(http.ResponseWriter, *http.Request)
 
 //Route route struct
 type Route struct {
-	Name       string
 	Method     string
 	Path       string
 	Handler    http.HandlerFunc
@@ -15,21 +14,18 @@ type Route struct {
 	Middleware []Middleware
 }
 
-var routes = []Route{
-	Route{
-		Name:   "New Product",
+var routes = map[string]Route{
+	"NewProduct": Route{
 		Method: "POST",
 		Path:   "/products/new",
 		Maker:  NewProductHandler,
 	},
-	Route{
-		Name:   "Get Products",
+	"AllProducts": Route{
 		Method: "GET",
 		Path:   "/products/all",
 		Maker:  AllProductsHandler,
 	},
-	Route{
-		Name:   "Update Product",
+	"UpdateProduct": Route{
 		Method: "PUT",
 		Path:   "/products/{productID}",
 		Maker:  UpdateProductHandler,

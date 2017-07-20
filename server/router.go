@@ -12,7 +12,7 @@ import (
 func NewRouter(dbSession *mgo.Session, middleware ...Middleware) http.Handler {
 	router := mux.NewRouter()
 
-	for _, route := range routes {
+	for name, route := range routes {
 		h := route.Handler
 		if h == nil && route.Maker != nil {
 			h = route.Maker(dbSession)
@@ -21,7 +21,7 @@ func NewRouter(dbSession *mgo.Session, middleware ...Middleware) http.Handler {
 		router.
 			Methods(route.Method).
 			Path(route.Path).
-			Name(route.Name).
+			Name(name).
 			Handler(handler)
 	}
 	return ApplyMiddleware(router, middleware)
