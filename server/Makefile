@@ -1,4 +1,4 @@
-SRC = errors.go globals.go handlers.go main.go middleware.go models.go router.go routes.go utils.go
+SRC = main.go
 CC = go
 
 run:
