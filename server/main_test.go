@@ -9,15 +9,23 @@ import (
 	"os"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	db "./database"
 	mware "./middleware"
 	models "./models"
 	routing "./routing"
 )
 
-var middleware = []mware.Middleware{}
-
 var crud *db.CRUD
+
+//Fail messages
+const (
+	invalidContentType = "Invalid Content-Type header."
+	unexpectedResponse = "Unexpected response data."
+	invalidStatusCode  = "Invalid status code."
+	jsonContentType    = "application/json"
+)
 
 // TestMain wraps all tests with the needed initialized mock DB and fixtures
 func TestMain(m *testing.M) {
@@ -38,9 +46,8 @@ func Test_NewProductEndpoint(t *testing.T) {
 	route := routing.Routes["NewProduct"]
 	h := http.HandlerFunc(route.Maker(crud))
 	handler := mware.ApplyMiddleware(h, route.Middleware)
-	handler = mware.ApplyMiddleware(handler, middleware)
 
-	prod := models.NewProduct{
+	prod := models.Product{
 		Name:     "Yuka Socks",
 		Brand:    "Magic Feet",
 		Category: "Footwear",
@@ -55,23 +62,13 @@ func Test_NewProductEndpoint(t *testing.T) {
 	req.Header.Add("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, req)
-
 	resp := w.Result()
 	body, _ := ioutil.ReadAll(resp.Body)
 	var respProd models.Product
 
 	_ = json.Unmarshal(body, &respProd)
-
-	contentType := "application/json"
-	if resp.Header.Get("Content-Type") != contentType {
-		t.Errorf("Invalid Content-Type, expected '%s' got '%s'", contentType, resp.Header.Get("Content-Type"))
-	}
-	if respProd.Name != prod.Name {
-		t.Error("Response does not match request data")
-	}
-
-	if resp.StatusCode != http.StatusCreated {
-		t.Errorf("Invalid status code, expected '%d' got '%d'", http.StatusCreated, resp.StatusCode)
-	}
-
+	assert := assert.New(t)
+	assert.Equal(http.StatusCreated, resp.StatusCode, invalidStatusCode)
+	assert.Equal(jsonContentType, resp.Header.Get("Content-Type"), invalidContentType)
+	assert.True(prod.Equals(respProd), unexpectedResponse)
 }
