@@ -9,14 +9,6 @@ import (
 //Middleware func
 type Middleware func(http.Handler) http.Handler
 
-//JSONMiddleware adds json header to responses
-func JSONMiddleware(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		h.ServeHTTP(w, r)
-	})
-}
-
 //LoggerMiddleware logs each request
 func LoggerMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +25,7 @@ func LoggerMiddleware(h http.Handler) http.Handler {
 	})
 }
 
-//CorsMiddleware allow Cors
+//CorsMiddleware allows cross origin access
 func CorsMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Allow-Cross-Origin", "*")

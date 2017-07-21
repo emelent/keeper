@@ -24,7 +24,6 @@ func main() {
 	defer crud.Close()
 	router := routing.NewRouter(crud,
 		mware.LoggerMiddleware,
-		mware.JSONMiddleware,
 		mware.CorsMiddleware,
 	)
 	port := ":8999"
