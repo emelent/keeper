@@ -14,7 +14,9 @@ import (
 
 const productsCollection = "products"
 
-func jsonEncode(w http.ResponseWriter, v interface{}) {
+func jsonEncode(w http.ResponseWriter, v interface{}, statusCode int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
 	if err := json.NewEncoder(w).Encode(v); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -37,6 +39,10 @@ func NewProductHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		if err := np.OK(); err != nil {
+			http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+			return
+		}
 		p := models.Product{
 			Name:     np.Name,
 			Brand:    np.Brand,
@@ -52,8 +58,7 @@ func NewProductHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
-		w.WriteHeader(http.StatusCreated)
-		jsonEncode(w, p)
+		jsonEncode(w, p, http.StatusCreated)
 	}
 }
 
@@ -68,7 +73,7 @@ func AllProductsHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) 
 			return
 		}
 
-		jsonEncode(w, products)
+		jsonEncode(w, products, http.StatusOK)
 	}
 }
 
@@ -90,6 +95,6 @@ func UpdateProductHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		jsonEncode(w, p)
+		jsonEncode(w, p, http.StatusOK)
 	}
 }

@@ -15,9 +15,7 @@ import (
 	routing "./routing"
 )
 
-var middleware = []mware.Middleware{
-	mware.JSONMiddleware,
-}
+var middleware = []mware.Middleware{}
 
 var crud *db.CRUD
 
@@ -36,7 +34,7 @@ func TestMain(m *testing.M) {
 	os.Exit(retCode)
 }
 
-func TestNewProductEndpoint(t *testing.T) {
+func Test_NewProductEndpoint(t *testing.T) {
 	route := routing.Routes["NewProduct"]
 	h := http.HandlerFunc(route.Maker(crud))
 	handler := mware.ApplyMiddleware(h, route.Middleware)
@@ -60,15 +58,15 @@ func TestNewProductEndpoint(t *testing.T) {
 
 	resp := w.Result()
 	body, _ := ioutil.ReadAll(resp.Body)
-	var respJSON models.Product
+	var respProd models.Product
 
-	_ = json.Unmarshal(body, &respJSON)
+	_ = json.Unmarshal(body, &respProd)
 
 	contentType := "application/json"
 	if resp.Header.Get("Content-Type") != contentType {
 		t.Errorf("Invalid Content-Type, expected '%s' got '%s'", contentType, resp.Header.Get("Content-Type"))
 	}
-	if respJSON.Name != prod.Name {
+	if respProd.Name != prod.Name {
 		t.Error("Response does not match request data")
 	}
 
