@@ -34,22 +34,14 @@ func NewProductHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer crud.CloseCopy()
 
-		var np models.NewProduct
-		if err := jsonDecode(r, &np); err != nil {
+		var p models.Product
+		if err := jsonDecode(r, &p); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		if err := np.OK(); err != nil {
+		if err := p.OK(); err != nil {
 			http.Error(w, err.Error(), http.StatusUnprocessableEntity)
 			return
-		}
-		p := models.Product{
-			Name:     np.Name,
-			Brand:    np.Brand,
-			Buy:      np.Buy,
-			Sell:     np.Sell,
-			Category: np.Category,
-			Quantity: np.Quantity,
 		}
 		p.ID = bson.NewObjectId()
 
