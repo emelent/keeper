@@ -21,15 +21,15 @@ func (db *CRUD) InitCopy() {
 }
 
 //Insert inserts into db
-func (db *CRUD) Insert(collection string, value interface{}) error {
+func (db *CRUD) Insert(collection string, values ...interface{}) error {
 	//mock
 	if db.Session == nil {
-		db.TempStorage[collection] = append(db.TempStorage[collection], value)
+		db.TempStorage[collection] = append(db.TempStorage[collection], values)
 		return nil
 	}
 
 	db.InitCopy()
-	err := db.CopySession.DB(config.DbName).C(collection).Insert(value)
+	err := db.CopySession.DB(config.DbName).C(collection).Insert(values)
 	return err
 }
 
