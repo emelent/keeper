@@ -55,6 +55,9 @@ func generateProductFixture(n int) []models.Product {
 		}
 	}
 
+	//insert data into mock db
+	crud.Insert("products", products)
+
 	return products
 }
 
@@ -70,7 +73,10 @@ func prepareHandler(name string) http.Handler {
 // TEST HANDLERS
 //==================================
 func Test_NewProductHandler(t *testing.T) {
+	//prepare handler
 	handler := prepareHandler("NewProduct")
+
+	//prepare request
 	prod := models.Product{
 		Name:     "Yuka Socks",
 		Brand:    "Magic Feet",
@@ -80,17 +86,20 @@ func Test_NewProductHandler(t *testing.T) {
 		Buy:      35,
 	}
 	prodJSON, _ := json.Marshal(prod)
-
 	req := httptest.NewRequest("POST", "/", bytes.NewBuffer(prodJSON))
 	req.Header.Add("Content-Type", "application/json")
+
+	//make request
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, req)
 	res := w.Result()
-	body, _ := ioutil.ReadAll(res.Body)
 
+	//process response
+	body, _ := ioutil.ReadAll(res.Body)
 	var respProd models.Product
 	_ = json.Unmarshal(body, &respProd)
 
+	//make assertions
 	assert := assert.New(t)
 	assert.Equal(http.StatusCreated, res.StatusCode, invalidStatusCode)
 	assert.Equal(jsonContentType, res.Header.Get("Content-Type"), invalidContentType)
@@ -98,23 +107,28 @@ func Test_NewProductHandler(t *testing.T) {
 }
 
 func Test_AllProductsHandler(t *testing.T) {
+	//prepare handler response
 	handler := prepareHandler("AllProducts")
 	req := httptest.NewRequest("GET", "/", nil)
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, req)
 	res := w.Result()
 
+	//make assertions
 	assert := assert.New(t)
 	assert.Equal(http.StatusOK, res.StatusCode, invalidStatusCode)
 	assert.Equal(jsonContentType, res.Header.Get("Content-Type"), invalidContentType)
 }
 
 func Test_UpdateProductsHandler(t *testing.T) {
+	//prepare fixtures
 	products := generateProductFixture(10)
-	crud.Insert("products", products)
+
+	//setup test server
 	ts := httptest.NewServer(routing.NewRouter(crud))
 	defer ts.Close()
 
+	//prepare request
 	id := products[0].ID
 	url := ts.URL + "/products/" + id.Hex()
 	updateProd := models.Product{
@@ -127,19 +141,47 @@ func Test_UpdateProductsHandler(t *testing.T) {
 		Buy:      35,
 	}
 	payload, _ := json.Marshal(updateProd)
-
 	req, _ := http.NewRequest("PUT", url, bytes.NewBuffer(payload))
 	req.Header.Add("content-type", "application/json")
 
+	//make request
 	res, _ := http.DefaultClient.Do(req)
-	assert := assert.New(t)
 
+	//process response
 	body, _ := ioutil.ReadAll(res.Body)
+	var resProd models.Product
+	_ = json.Unmarshal(body, &resProd)
 
-	var respProd models.Product
-	_ = json.Unmarshal(body, &respProd)
-
+	//make assertions
+	assert := assert.New(t)
 	assert.Equal(http.StatusOK, res.StatusCode, invalidStatusCode)
 	assert.Equal(jsonContentType, res.Header.Get("Content-Type"), invalidContentType)
-	assert.True(updateProd.Equals(respProd), unexpectedResponse)
+	assert.True(updateProd.Equals(resProd), unexpectedResponse)
+}
+
+func Test_DeleteProductsHandler(t *testing.T) {
+	//prepare fixtures
+	products := generateProductFixture(10)
+
+	//setup test server
+	ts := httptest.NewServer(routing.NewRouter(crud))
+	defer ts.Close()
+
+	//prepare request
+	id := products[0].ID
+	url := ts.URL + "/products/" + id.Hex()
+	req, _ := http.NewRequest("DELETE", url, nil)
+
+	//make request
+	res, _ := http.DefaultClient.Do(req)
+
+	//process response
+	body, _ := ioutil.ReadAll(res.Body)
+	var resStr string
+	_ = json.Unmarshal(body, &resStr)
+
+	//make assertions
+	assert := assert.New(t)
+	assert.Equal(http.StatusOK, res.StatusCode, invalidStatusCode)
+	assert.Equal(jsonContentType, res.Header.Get("Content-Type"), invalidContentType)
 }
