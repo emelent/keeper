@@ -59,19 +59,16 @@ func (db *CRUD) FindOne(collection string, query interface{}) (interface{}, erro
 	return result, err
 }
 
-//Update a db entry
-func (db *CRUD) Update(collection string, values *[]interface{}) {
-	//mock
-	if db.Session == nil {
-
-	}
-}
-
 //UpdateID updates entry by id
 func (db *CRUD) UpdateID(collection string, id, value interface{}) error {
 	//mock
 	if db.Session == nil {
-		//TODO implement mock
+		//Not implemented because I don't know how to do it yet.
+		//This needs me to check type of entry then make a temp entry,
+		//check if it has an 'id' property or assume it has one and write
+		//the necessary code for checks and fallbacks, and then finally update
+		//the entry in the slice, which I think is a bit much for a mock,
+		//and haven't come across a need for this to test my handlers.
 		return nil
 	}
 
@@ -79,12 +76,17 @@ func (db *CRUD) UpdateID(collection string, id, value interface{}) error {
 	return db.CopySession.DB(config.DbName).C(collection).UpdateId(id, value)
 }
 
-//Delete a db entry
-func (db *CRUD) Delete(collection string, value interface{}) {
+//DeleteID deletes a db entry by id
+func (db *CRUD) DeleteID(collection string, id interface{}) error {
 	//mock
 	if db.Session == nil {
-
+		//This is not implemented for the same reason UpdateID is
+		//not implemented.
+		return nil
 	}
+
+	db.InitCopy()
+	return db.CopySession.DB(config.DbName).C(collection).RemoveId(id)
 }
 
 //Close closes both the copy and the original db session
