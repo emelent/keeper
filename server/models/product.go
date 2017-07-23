@@ -14,8 +14,8 @@ type Product struct {
 
 	Quantity int `json:"quantity" bson:"quantity"`
 
-	Sell float32 `json:"sell" bson:"sell"`
-	Buy  float32 `json:"buy" bson:"buy"`
+	Sell float64 `json:"sell" bson:"sell"`
+	Buy  float64 `json:"buy" bson:"buy"`
 }
 
 //Equals compares two Product structs
