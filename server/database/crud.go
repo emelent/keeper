@@ -29,7 +29,7 @@ func (db *CRUD) Insert(collection string, values ...interface{}) error {
 	}
 
 	db.InitCopy()
-	err := db.CopySession.DB(config.DbName).C(collection).Insert(values)
+	err := db.CopySession.DB(config.DbName).C(collection).Insert(values...)
 	return err
 }
 
