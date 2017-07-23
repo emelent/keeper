@@ -59,7 +59,20 @@ func AllProductsHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) 
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer crud.CloseCopy()
 
-		products, err := crud.FindAll(productsCollection, nil)
+		results, err := crud.FindAll(productsCollection, nil)
+		products := make([]models.Product, len(results))
+		for index, raw := range results {
+			bsonProd := raw.(bson.M)
+			products[index] = models.Product{
+				ID:       bsonProd["_id"].(bson.ObjectId),
+				Name:     bsonProd["name"].(string),
+				Brand:    bsonProd["brand"].(string),
+				Category: bsonProd["category"].(string),
+				Quantity: bsonProd["quantity"].(int),
+				Sell:     bsonProd["sell"].(float64),
+				Buy:      bsonProd["buy"].(float64),
+			}
+		}
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
