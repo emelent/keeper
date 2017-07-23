@@ -37,4 +37,9 @@ var Routes = map[string]Route{
 		Path:   "/products/{productID}",
 		Maker:  handler.UpdateProductHandler,
 	},
+	"DeleteProduct": Route{
+		Method: "DELETE",
+		Path:   "/products/{productID}",
+		Maker:  handler.DeleteProductHandler,
+	},
 }

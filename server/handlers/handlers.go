@@ -90,3 +90,19 @@ func UpdateProductHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request
 		jsonEncode(w, p, http.StatusOK)
 	}
 }
+
+//DeleteProductHandler endpoint
+func DeleteProductHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		defer crud.CloseCopy()
+
+		params := mux.Vars(r)
+		productID := bson.ObjectIdHex(params["productID"])
+
+		if err := crud.DeleteID(productsCollection, productID); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		jsonEncode(w, "Product successfully deleted.", http.StatusOK)
+	}
+}
