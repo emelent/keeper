@@ -39,7 +39,8 @@ const styles = {
 	},
 	icon:{
 		flex: 1,
-		textAlign: 'center'
-
+		textAlign: 'center',
+		color: '#222',
+		fontSize:'1.3em'
 	}
 }
