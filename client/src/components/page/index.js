@@ -14,7 +14,9 @@ export default class Page extends Component{
 		return (
 			<div style={s}>
 				<TitleBar title={pageTitle} icon={pageIcon} />
-				{content}
+				<div style={styles.content}>
+					{content}
+				</div>
 			</div>
 		)
 	}
@@ -36,6 +38,12 @@ const styles = {
 		//dimension
 		width: '100%',
 		height: '100%'
+		//thm
+	},
+	content:{
+		//layout
+		marginTop: 80
+		//dimension
 		//thm
 	}
 }
