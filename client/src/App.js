@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import './App.css';
-import Example  from './Example';
+import React, { Component } from 'react'
+import './App.css'
+import Example  from './Example'
 
 class App extends Component {
-  render() {
-    return (<Example />);
-  }
+	render() {
+		return (<Example />)
+	}
 }
 
-export default App;
+export default App
