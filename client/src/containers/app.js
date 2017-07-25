@@ -1,30 +1,23 @@
 import React, { Component } from 'react'
 import {
-	BrowserRouter as Router,
 	Route
 } from 'react-router-dom'
 
-import TabBar from './tabBar'
-import Home from './home'
-import Inventory from './inventory'
+import TabBar from '../components/tabBar'
+import Home from '../components/home'
+import Inventory from '../components/inventory'
 
 
 export default class App extends Component{
-	constructor(props){
-		super(props)
-	}
-
 	render(){
 		return (
-			<Router>
-				<div style={styles.container}>
-					<div style={styles.content}>
-						<Route exact path="/" component={Home} />
-						<Route path="/inventory" component={Inventory} />
-					</div>
-					<TabBar />
+			<div style={styles.container}>
+				<div style={styles.content}>
+					<Route exact path="/" component={Home} />
+					<Route path="/inventory" component={Inventory} />
 				</div>
-			</Router>
+				<TabBar />
+			</div>
 		)
 	}
 }
