@@ -17,7 +17,7 @@ export const fetchProducts = () => (dispatch) => {
 		.catch((err) => {
 			dispatch({
 				type: actionType.FETCH_PRODUCTS_REJECTED,
-				payload: err.response || 'Failed to connect to server.'
+				payload: (err.response) ? err.response.data: err.toString()
 			})
 		})
 }
