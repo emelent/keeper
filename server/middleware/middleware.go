@@ -28,7 +28,7 @@ func LoggerMiddleware(h http.Handler) http.Handler {
 //CorsMiddleware allows cross origin access
 func CorsMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Allow-Cross-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		h.ServeHTTP(w, r)
 	})
 }
