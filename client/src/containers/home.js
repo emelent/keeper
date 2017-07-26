@@ -1,17 +1,17 @@
 import React,{Component} from 'react'
 
-import Page from '../page'
+import Page from '../components/page'
 
-export default class Inventory extends Component{
+export default class Home extends Component{
 
 	render(){
 		const content = (
 			<div style={styles.container}>
-				<span>What's in the box?</span>
+				<span>There isn't really much here</span>
 			</div>
 		)
 		return (
-			<Page pageTitle="Inventory"
+			<Page pageTitle="Home"
 				pageIcon="fa-angle-left"
 				content={content}
 			/>

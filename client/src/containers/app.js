@@ -4,8 +4,8 @@ import {
 } from 'react-router-dom'
 
 import TabBar from '../components/tabBar'
-import Home from '../components/home'
-import Inventory from '../components/inventory'
+import Home from './home'
+import Inventory from './inventory'
 
 
 export default class App extends Component{
