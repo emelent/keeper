@@ -5,7 +5,7 @@ run:
 	${CC} run ${SRC}
 
 build:
-	${CC} build ${SRC}
+	${CC} -o server build ${SRC}
 
 test:
 	${CC} test
