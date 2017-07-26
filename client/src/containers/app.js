@@ -34,14 +34,14 @@ const styles = {
 		width: '100%',
 
 		//theme
-		backgroundColor: 'red'
+		backgroundColor: '#eee'
 	},
 	content: {
 		//layout
 		//dimensions
 		height: 'calculate(100% - 80px)',
-		width: '100%',
+		width: '100%'
 		//theme
-		backgroundColor:'orange'
+		// backgroundColor:'orange'
 	}
 }
