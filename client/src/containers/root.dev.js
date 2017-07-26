@@ -4,7 +4,6 @@ import {BrowserRouter as Router} from 'react-router-dom'
 
 import configureStore from '../redux/store/configureStore'
 import {fetchProducts} from '../redux/actions/inventory'
-import DevTools from './devTools'
 import App from './app'
 
 
@@ -16,10 +15,7 @@ const Root = () => (
 	<Provider store={store}>
 
 		<Router>
-			<div>
-				<App/>
-				<DevTools />
-			</div>
+			<App/>
 		</Router>
 	</Provider>
 )
