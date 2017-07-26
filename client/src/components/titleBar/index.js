@@ -4,12 +4,12 @@ import PropTypes from 'prop-types'
 export default class TitleBar extends Component{
 	render(){
 		const {title, icon, style} = this.props
-		const className = "fa " + icon
+		const iconName = "fa " + icon
 		const s = Object.assign({}, styles.container, style)
 		return (
 			<div style={s}>
 				<div>
-					<span style={styles.icon} className={className}/>
+					<span style={styles.icon} className={iconName}/>
 					<span>{title}</span>
 				</div>
 			</div>
