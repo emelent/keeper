@@ -40,8 +40,9 @@ const styles = {
 		//layout
 		//dimensions
 		height: 'calculate(100% - 80px)',
-		width: '100%'
+		width: '100%',
+
 		//theme
-		// backgroundColor:'orange'
+		backgroundColor:'orange'
 	}
 }

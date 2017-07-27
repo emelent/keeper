@@ -2,31 +2,36 @@ import React,{Component} from 'react'
 import {
 	connect
 } from 'react-redux'
+import {bindActionCreators} from 'redux'
+
 import {
-	bindActionCreators
-} from 'redux'
-// import {
-// 	Route
-// } from 'react-router'
+	Route
+} from 'react-router'
 
 import Page from '../components/page'
 
+import InventoryMenu from '../components/inventoryMenu'
+
 import {fetchProducts, clearError} from '../redux/actions/inventory'
+
 
 class Inventory extends Component{
 
 	render(){
 		// const products = this.props.inventory.get('products')
+		const {history} = this.props
+		const Menu = () => (
+			<InventoryMenu history={history} />
+		)
+
 		const content = (
 			<div style={styles.container}>
-				{
-					//<Route path="available" component={} />
-				}
+				<Route exact path="/inventory" component={Menu} />
 			</div>
 		)
 		return (
 			<Page pageTitle="Inventory"
-				pageIcon="fa-angle-left"
+				pageIcon="fa fa-angle-left"
 				content={content}
 			/>
 		)
@@ -35,7 +40,8 @@ class Inventory extends Component{
 
 const styles = {
 	container:{
-
+		width: '100%',
+		height: '100%'
 	}
 }
 

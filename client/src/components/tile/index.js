@@ -15,12 +15,6 @@ export default class Tile extends Component{
 		this.handleOnRelease = this.handleOnRelease.bind(this)
 	}
 
-	getTileContainerClassname(){
-		return cx({
-			'tile--pressed': this.state.pressed
-		})
-	}
-
 	handleOnPress(){
 		this.setState({pressed: true})
 	}
@@ -38,23 +32,26 @@ export default class Tile extends Component{
 			style,
 			onClick
 		} = this.props
+		const cn = cx('tile', {
+			'tile--pressed': this.state.pressed
+		})
 		const s = Object.assign(
 			{},
 			{backgroundColor: bgColor},
 			{color: fgColor},
 			style
 		)
-		const iconName = 'icon icon-camera' + icon
 		
 		return (
 			<div style={s}
+				className={cn}
 				onClick={onClick}
 				onMouseDown={this.handleOnPress}
 				onMouseUp={this.handleOnRelease}
 			>
 				<div className="">
-					<span  className={iconName} />
-					<span >{text}</span>
+					<div  className={icon + " tile__icon"} />
+					<div className="tile__text">{text}</div>
 				</div>
 			</div>
 		)

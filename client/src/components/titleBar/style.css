@@ -1,6 +1,25 @@
 .title-bar{
 	/* layout */
 	position: 'absolute';
+	top: 0;
+	left: 0;
+
 	/* dimension */
+	width: 100%;
+	height: 80px;
+	
 	/* theme */
+	background-color: #fff;
+	color: #222;
+}
+
+.title-bar__icon{
+    font-size: 2em !important;
+    margin-left: 10px;
+    margin-right: 20px;
+    line-height: 80px;
+}
+.title-bar__text{
+	font-size: 2.5em;
+	line-height: 80px;
 }
