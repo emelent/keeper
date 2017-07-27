@@ -42,7 +42,6 @@ const styles = {
 	},
 	content:{
 		//layout
-		marginTop: 80,
 		//dimension
 		width: '100%',
 		height: '100%'

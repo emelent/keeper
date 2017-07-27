@@ -28,7 +28,7 @@ export default class InventoryMenu extends Component{
 				/>
 				<Tile
 					text="Add"
-					icon="icon icon-tshirt"
+					icon="icon icon-plus"
 					bgColor="#1EBC61"
 				/>
 			</div>

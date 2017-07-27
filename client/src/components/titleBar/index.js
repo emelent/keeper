@@ -9,7 +9,9 @@ export default class TitleBar extends Component{
 		const {title, icon, style} = this.props
 		return (
 			<div className="title-bar" style={style}>
+				{icon !== "" &&
 				<span className={icon + " title-bar__icon"}/>
+				}
 				<span className="title-bar__text">{title}</span>
 			</div>
 		)

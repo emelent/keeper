@@ -31,7 +31,7 @@ class Inventory extends Component{
 		)
 		return (
 			<Page pageTitle="Inventory"
-				pageIcon="fa fa-angle-left"
+				pageIcon=""
 				content={content}
 			/>
 		)
