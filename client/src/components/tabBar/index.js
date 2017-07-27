@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
 import {Link} from 'react-router-dom'
 
+import './style.css'
+
+
 export default class TabBar extends Component{
 	constructor(props){
 		super(props)
@@ -11,10 +14,10 @@ export default class TabBar extends Component{
 		const s = Object.assign({}, styles.container, style)
 		return (
 			<div style={s}>
-				<Link to="/" style={styles.icon}><span className="fa fa-shopping-basket" /></Link>
-				<Link to="/inventory" style={styles.icon}><span className="fa fa-archive" /></Link>
-				<Link to="/analysis" style={styles.icon}><span className="fa fa-line-chart" /></Link>
-				<Link to="/settings" style={styles.icon}><span className="fa fa-cog" /></Link>
+				<Link to="/" style={styles.icon}><span className="icon icon-cart" /></Link>
+				<Link to="/inventory" style={styles.icon}><span className="icon icon-edit" /></Link>
+				<Link to="/analysis" style={styles.icon}><span className="icon icon-rating" /></Link>
+				<Link to="/settings" style={styles.icon}><span className="icon icon-settings" /></Link>
 			</div>
 		)
 	}
