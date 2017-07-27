@@ -6,7 +6,7 @@ import registerServiceWorker from './registerServiceWorker'
 
 import './css/index.css'
 import './css/font-awesome.min.css'
-
+import './css/helium.css'
 
 ReactDOM.render(<Root />, document.getElementById('root'))
 registerServiceWorker()
