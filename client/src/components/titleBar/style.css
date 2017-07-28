@@ -6,8 +6,9 @@
 	height: 70px;
 	/* max-height: 10vh; */
 	/* theme */
-	   /* background-color: #fff;    */
-	color: #222;
+	    /* background-color: #fff;     */
+	/* color: #222; */
+	color: #eee;
 }
 
 .title-bar__icon{

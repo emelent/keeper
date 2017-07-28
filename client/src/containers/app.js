@@ -50,7 +50,8 @@ const styles = {
 		maxWidth: '100%',
 
 		//theme
-		backgroundColor: '#eee',
+		backgroundColor: '#1C2A39',
+		color: '#eee',
 		boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
 	},
 	content: {
