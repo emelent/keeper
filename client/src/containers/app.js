@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import {
+	withRouter,
+	Switch,
 	Route
 } from 'react-router-dom'
 
@@ -8,13 +10,21 @@ import Home from './home'
 import Inventory from './inventory'
 
 
-export default class App extends Component{
+const UnknownRoute = () => (
+	<div>
+		404 Page Not Found
+	</div>
+)
+class App extends Component{
 	render(){
 		return (
 			<div style={styles.container}>
 				<div style={styles.content}>
-					<Route exact path="/" component={Home} />
-					<Route path="/inventory" component={Inventory} />
+					<Switch>
+						<Route exact path="/" component={Home} />
+						<Route path="/inventory" component={Inventory} />
+						<Route component={UnknownRoute} />
+					</Switch>
 				</div>
 				<TabBar />
 			</div>
@@ -53,3 +63,5 @@ const styles = {
 		backgroundColor:'orange'
 	}
 }
+
+export default withRouter(App)
