@@ -4,7 +4,7 @@ import {
 	compose
 } from 'redux'
 import thunk from 'redux-thunk'
-import {createLogger} from 'redux-logger'
+// import {createLogger} from 'redux-logger'
 
 import rootReducer from '../reducers'
 
@@ -14,7 +14,7 @@ const configureStore = (preloadedState) => {
 		rootReducer,
 		preloadedState,
 		composeEnhancers(
-			applyMiddleware(thunk, createLogger())
+			applyMiddleware(thunk)//, createLogger())
 		)
 	)
 
