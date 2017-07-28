@@ -4,6 +4,20 @@ let doCache = false
 // Name our cache
 let CACHE_NAME = 'demo-cache-v1'
 
+const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB
+const open = indexedDB.open('MyDb', 1)
+const storeName = 'ShopKeeperStore'
+
+//create schema
+open.onupgradeneeded = () =>{
+	const db = open.result
+	const store = db.createObjectStore(storeName, {keyPath: "id"})
+	store.createIndex('products', [
+		'id', 'name', 'brand', 'category', 'quantity', 'sell', 'buy'
+	])
+}
+
+    
 // Delete old caches that are not our current one!
 self.addEventListener("activate", event => {
 	console.log('service-worker activate')
@@ -48,43 +62,6 @@ self.addEventListener('install', (event) => {
 				})
 		)
 	}
-  
-	fetch('http://0.0.0.0:8999/products/all')
-		.then(response => response.json())
-		.then(products => {
-			const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB
-  
-			const open = indexedDB.open('MyDb', 1)
-			const storeName = 'ShopKeeperStore'
-			//create schema
-			open.onupgradeneeded = () =>{
-				const db = open.result
-				const store = db.createObjectStore(storeName, {keyPath: "id"})
-				store.createIndex('products', [
-					'id', 'name', 'brand', 'category', 'quantity', 'sell', 'buy'
-				])
-			}
-  
-			open.onsuccess = () => {
-				//start a new transaction
-				const db = open.result
-				const tx = db.transaction(storeName, 'readwrite')
-				const store = tx.objectStore(storeName)
-
-				//add data
-				products.forEach(product => store.put(product))
-    
-				//test retrieval
-				const result = store.get(products[0].id)
-				result.onsuccess = (stuff) => {
-					console.log('args =>', stuff)
-					console.log('result =>', result.result)
-				}
-
-				//close the db
-				tx.oncomplete = () => db.close()
-			}
-		})
 })
 
 // When the webpage goes to fetch files, we intercept that request and serve up the matching files
