@@ -6,9 +6,10 @@ import {
 } from 'react-router-dom'
 
 import TabBar from '../components/tabBar'
-import Home from './home'
+import Purchase from './purchase'
 import Inventory from './inventory'
-
+import Analysis from './analysis'
+import Settings from './settings'
 
 const UnknownRoute = () => (
 	<div>
@@ -21,8 +22,10 @@ class App extends Component{
 			<div style={styles.container}>
 				<div style={styles.content}>
 					<Switch>
-						<Route exact path="/" component={Home} />
+						<Route exact path="/" component={Purchase} />
 						<Route exact path="/inventory" component={Inventory} />
+						<Route exact path="/analysis" component={Analysis} />
+						<Route exact path="/settings" component={Settings} />
 						<Route component={UnknownRoute} />
 					</Switch>
 				</div>
