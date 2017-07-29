@@ -3,10 +3,10 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 
 import Page from '../components/page'
-
 import TileMenu from '../components/tileMenu'
 import ProductList from '../components/productList'
 import Modal from '../components/modal'
+import AddInventoryItem from '../components/addInventoryItem'
 import {fetchProducts, clearError} from '../redux/actions/inventory'
 
 
@@ -20,6 +20,7 @@ class Inventory extends Component{
 		}
 		this.handleTileClick = this.handleTileClick.bind(this)
 		this.handleModalClose = this.handleModalClose.bind(this)
+		this.addItem = this.addItem.bind(this)
 	}
 
 	handleTileClick(name){
@@ -28,6 +29,10 @@ class Inventory extends Component{
 
 	handleModalClose(){
 		this.setState({modal: null})
+	}
+
+	addItem(item){
+		console.log('Adding product =>', item)
 	}
 
 	getModalContent(){
@@ -45,6 +50,10 @@ class Inventory extends Component{
 				)
 			case 'all':
 				return createProductList(products, fields)
+			case 'add':
+				return <AddInventoryItem
+					onAddClick={this.addItem}
+				/>
 		}
 		return null
 	}
@@ -72,7 +81,6 @@ class Inventory extends Component{
 		)
 		return (
 			<Page pageTitle="Inventory"
-				pageIcon=""
 				content={content}
 			/>
 		)
@@ -104,10 +112,12 @@ const tiles = [
 	{
 		name:'add',
 		icon:'icon icon-plus',
-		bgColor:'#1EBC61'
+		bgColor:'#27ae60'
 	}
 ]
 const fields = ['name', 'brand', 'quantity', 'sell']
+
+
 const createProductList = (products, fields) => (
 	<ProductList products={products}
 		fields={fields}

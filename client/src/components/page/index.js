@@ -28,6 +28,9 @@ Page.propTypes = {
 	pageIcon: PropTypes.string
 }
 
+Page.defaultProps = {
+	pageIcon: ""
+}
 const styles = {
 	container:{
 		//layout

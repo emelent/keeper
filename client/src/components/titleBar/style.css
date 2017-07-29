@@ -8,14 +8,15 @@
 	/* theme */
 	    /* background-color: #fff;     */
 	/* color: #222; */
-	color: #eee;
+	color: #fff;
 }
 
 .title-bar__icon{
     font-size: 2em !important;
     margin-left: 10px;
     margin-right: 10px;
-    line-height: 70px;
+	line-height: 70px;
+	cursor: pointer;
 }
 .title-bar__text{
 	margin-left: 10px;
