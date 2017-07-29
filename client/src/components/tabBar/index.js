@@ -1,17 +1,24 @@
 import React, {Component} from 'react'
-import {Link} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom'
 import cx from 'classnames'
 
 import './style.css'
 
 
-export default class TabBar extends Component{
+class TabBar extends Component{
 	constructor(props){
 		super(props)
 
-		this.state = {
-			activeLink: 'home'
+		const path = props.history.location.pathname.slice(1)
+		let activeLink
+		switch (path){
+			case '':
+				activeLink = 'home'
+				break
+			default:
+				activeLink = path
 		}
+		this.setState({activeLink})
 	}
 
 	getTabItems(){
@@ -61,3 +68,5 @@ const tabItems = [
 		icon: 'settings'
 	}
 ]
+
+export default withRouter(TabBar)
