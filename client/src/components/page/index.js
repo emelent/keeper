@@ -13,7 +13,7 @@ export default class Page extends Component{
 		const s = Object.assign({}, styles.container, style)
 		return (
 			<div style={s}>
-				<TitleBar title={pageTitle} icon={pageIcon} />
+				<TitleBar title={pageTitle} icon={pageIcon | ""} />
 				<div style={styles.content}>
 					{content}
 				</div>
