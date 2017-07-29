@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import cx from 'classnames'
+import PropTypes from 'prop-types'
 
 import Tile from '../tile'
 import './style.css'
@@ -8,35 +8,38 @@ import './style.css'
 export default class InventoryMenu extends Component{
 
 	render(){
-		const {style, history} = this.props
-		const cn = cx('tile-menu')
+		const {style, onTileClick} = this.props
 		return (
-			<div style={style} className={cn}>
+			<div style={style} className="tile-menu">
 				<Tile
 					text="Available"
 					icon="icon icon-pants"
-					onClick={() => history.push('/inventory/available')}
+					onClick={() => onTileClick('available')}
+					bgColor="#0287D0"
 				/>
 				<Tile
 					text="Sold Out"
 					icon="icon icon-hanger"
 					bgColor="#8E44AD"
-					onClick={() => history.push('/inventory/soldOut')}
+					onClick={() => onTileClick('sold out')}
 				/>
 				<Tile
 					text="All"
 					icon="icon icon-sox"
 					bgColor="#DA3C78"
-					onClick={() => history.push('/inventory/all')}
+					onClick={() => onTileClick('all')}
 				/>
 				<Tile
 					text="Add"
 					icon="icon icon-plus"
 					bgColor="#1EBC61"
-					onClick={() => history.push('/inventory/add')}
+					onClick={() => onTileClick('add')}
 				/>
 			</div>
 		)
 	}
 }
 
+InventoryMenu.propTypes = {
+	onTileClick: PropTypes.func.isRequired
+}

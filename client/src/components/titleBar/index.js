@@ -6,11 +6,13 @@ import './style.css'
 
 export default class TitleBar extends Component{
 	render(){
-		const {title, icon, style} = this.props
+		const {title, icon, onIconClick, style} = this.props
 		return (
 			<div className="title-bar" style={style}>
 				{icon !== "" &&
-				<span className={icon + " title-bar__icon"}/>
+					<span className={icon + " title-bar__icon"}
+						onClick={onIconClick}
+					/>
 				}
 				<span className="title-bar__text">{title}</span>
 			</div>
@@ -20,5 +22,6 @@ export default class TitleBar extends Component{
 
 TitleBar.propTypes = {
 	title : PropTypes.string.isRequired,
-	icon: PropTypes.string
+	icon: PropTypes.string,
+	onIconClick: PropTypes.func
 }

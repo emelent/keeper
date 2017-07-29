@@ -5,33 +5,27 @@ import './style.css'
 
 export default class ProductList extends Component{
 
-	createProductList(products){
-		console.log('products =>', products)
+	createProductList(products, fields){
 		return products.map((product) => (
 			<tr className="product-list__item" key={product.id}>
-				<td>{product.name}</td>
-				<td>{product.brand}</td>
-				<td>{product.category}</td>
-				<td>{product.quantity}</td>
-				<td>{product.buy}</td>
-				<td>{product.sell}</td>
+				{fields.map(field => (
+					<td>{product[field]}</td>
+				))}
 			</tr>
 		))
 	}
 	render(){
-		const {products} = this.props
+		const {products, fields} = this.props
+
 		return (
 			<div className="product-container">
 				<table className="product-table">
 					<tr>
-						<th>Name</th>
-						<th>Brand</th>
-						<th>Category</th>
-						<th>Buy</th>
-						<th>Quantity</th>
-						<th>Sell</th>
+						{fields.map(field => (
+							<th>{field}</th>
+						))}
 					</tr>
-					{this.createProductList(products)}
+					{this.createProductList(products, fields)}
 				</table>
 			</div>
 		)
@@ -39,6 +33,7 @@ export default class ProductList extends Component{
 }
 
 ProductList.propTypes = {
-	products: PropTypes.array.isRequired
+	products: PropTypes.array.isRequired,
+	fields: PropTypes.array.isRequired
 }
 
