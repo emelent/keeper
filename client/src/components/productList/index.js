@@ -7,7 +7,7 @@ export default class ProductList extends Component{
 
 	createProductList(products, fields){
 		return products.map((product) => (
-			<tr className="product-list__item" key={product.id}>
+			<tr className="product-table__item" key={product.id}>
 				{fields.map(field => (
 					<td>{product[field]}</td>
 				))}
