@@ -22,7 +22,7 @@ class App extends Component{
 				<div style={styles.content}>
 					<Switch>
 						<Route exact path="/" component={Home} />
-						<Route path="/inventory" component={Inventory} />
+						<Route exact path="/inventory" component={Inventory} />
 						<Route component={UnknownRoute} />
 					</Switch>
 				</div>
