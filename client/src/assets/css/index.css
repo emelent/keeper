@@ -12,3 +12,7 @@ body {
   background-color: #07ABA0;
   /* background-color: #779cbf; */
 }
+
+.page-not-found{
+  text-align: center;
+}

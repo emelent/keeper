@@ -10,12 +10,18 @@ import Purchase from './purchase'
 import Inventory from './inventory'
 import Analysis from './analysis'
 import Settings from './settings'
+import Page from '../components/page'
 
-const UnknownRoute = () => (
-	<div>
-		404 Page Not Found
-	</div>
-)
+const UnknownRoute = () => {
+	const content = (
+		<div className="page-not-found">
+			<h2>404 Page Not Found</h2>
+		</div>
+	)
+	return (
+		<Page pageTitle="" content={content} />
+	)
+}
 class App extends Component{
 	render(){
 		return (
