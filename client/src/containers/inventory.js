@@ -6,18 +6,11 @@ import {bindActionCreators} from 'redux'
 
 import Page from '../components/page'
 
-import InventoryMenu from '../components/inventoryMenu'
+import TileMenu from '../components/tileMenu'
 import ProductList from '../components/productList'
 import Modal from '../components/modal'
 import {fetchProducts, clearError} from '../redux/actions/inventory'
 
-
-const fields = ['name', 'brand', 'quantity', 'sell']
-const createProductList = (products, fields) => (
-	<ProductList products={products}
-		fields={fields}
-		 />
-)
 
 class Inventory extends Component{
 
@@ -59,24 +52,18 @@ class Inventory extends Component{
 	}
 
 	getModalBgColor(){
-		switch (this.state.modal){
-			case 'available':
-				return '#0287D0'
-			case 'sold out':
-				return '#8E44AD'
-			case 'all':
-				return '#DA3C78'
-			case 'add':
-				return '#1EBC61'
-		}
+		const {modal} = this.state
+		if (!modal) return
+		return tiles.filter(t => t.name === modal)[0].bgColor
 	}
 
 	render(){
-		const {history} = this.props
 		const {modal} = this.state
 		const content = (
 			<div style={styles.container}>
-				<InventoryMenu history={history} onTileClick={this.handleTileClick}/>
+				<TileMenu  onTileClick={this.handleTileClick}
+					tiles={tiles}
+				/>
 				<Modal title={modal}
 					content={this.getModalContent()}
 					isOpen={modal !== null}
@@ -100,6 +87,34 @@ const styles = {
 		height: '100%'
 	}
 }
+const tiles = [
+	{
+		name: 'available',
+		icon: 'icon icon-pants',
+		bgColor: '#0287D0'
+	},
+	{
+		name:'sold out',
+		icon:'icon icon-hanger',
+		bgColor:'#8E44AD'
+	},
+	{
+		name:'all',
+		icon:'icon icon-sox',
+		bgColor:'#DA3C78'
+	},
+	{
+		name:'add',
+		icon:'icon icon-plus',
+		bgColor:'#1EBC61'
+	}
+]
+const fields = ['name', 'brand', 'quantity', 'sell']
+const createProductList = (products, fields) => (
+	<ProductList products={products}
+		fields={fields}
+		 />
+)
 
 
 const mapStateToProps = (state) => ({
