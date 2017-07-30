@@ -32,7 +32,8 @@ class Inventory extends Component{
 	}
 
 	addItem(item){
-		console.log('Adding product =>', item)
+		console.log('Adding =>', item)
+		this.handleModalClose()
 	}
 
 	getModalContent(){

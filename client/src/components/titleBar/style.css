@@ -13,10 +13,9 @@
 
 .title-bar__icon{
     font-size: 2em !important;
-    margin-left: 10px;
-    margin-right: 10px;
 	line-height: 70px;
 	cursor: pointer;
+	padding: 20px;
 }
 .title-bar__text{
 	margin-left: 10px;
