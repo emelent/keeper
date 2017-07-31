@@ -33,3 +33,67 @@ a{
 .page-not-found{
   text-align: center;
 }
+
+
+/* input controls */
+
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+  color:    #eee;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+ color:    #eee;
+ opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+ color:    #eee;
+ opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+ color:    #eee;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+ color:    #eee;
+}
+
+.input{
+	color: #eee;
+	box-sizing: border-box;
+	width: 48%;
+	height: 55px;
+	margin: 10px 1%;
+	padding: 15px 10px;
+	font-size: 1em;
+	background: rgba(255,255,255,0.8);
+	background: none;
+	border-radius: 0px;
+	border: 1px solid rgba(0,0,0,0.2);
+	text-transform: capitalize;
+	box-shadow: none !important;
+	outline: none;
+	font-family: Quicksand;
+}
+
+.input:focus{
+	box-shadow: none;
+	border-color: #fff;
+	background: rgba(255,255,255, 0.3);
+	color: #eee;
+}
+
+.button{
+	color: #fff;
+	display: block;
+	border: 1px solid #fff;
+	outline: none;
+	background: none;
+	font-weight: bold;
+	text-transform: uppercase;
+	min-width: 100%;
+	font-size: 1.2em;
+	margin: 20px auto;
+	  font-family: Quicksand;  
+
+	padding: 15px 0px;
+	border-radius: 0px;
+}

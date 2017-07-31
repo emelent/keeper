@@ -7,6 +7,7 @@ import TileMenu from '../components/tileMenu'
 import ProductList from '../components/productList'
 import Modal from '../components/modal'
 import AddInventoryItem from '../components/addInventoryItem'
+import StockUp from '../components/stockUp'
 import {fetchProducts, clearError} from '../redux/actions/product'
 
 
@@ -21,6 +22,7 @@ class Inventory extends Component{
 		this.handleTileClick = this.handleTileClick.bind(this)
 		this.handleModalClose = this.handleModalClose.bind(this)
 		this.addItem = this.addItem.bind(this)
+		this.stockItem = this.stockItem.bind(this)
 	}
 
 	componentDidMount(){
@@ -39,6 +41,11 @@ class Inventory extends Component{
 		this.handleModalClose()
 	}
 
+	stockItem(item, qty){
+		console.log('qty =>', qty)
+		console.log('item =>', item)
+		this.handleModalClose()
+	}
 	getModalContent(){
 		const products = this.props.product.get('products').toArray()
 		switch (this.state.modal){
@@ -52,9 +59,11 @@ class Inventory extends Component{
 					products.filter(p => p.quantity < 5),
 					fields
 				)
-			case 'all':
-				return createProductList(products, fields)
-			case 'add':
+			case 'stock up':
+				return <StockUp products={products}
+					onStockClick={this.stockItem}
+				/>
+			case 'add new item':
 				return <AddInventoryItem
 					onAddClick={this.addItem}
 				/>
@@ -106,15 +115,15 @@ const tiles = [
 	{
 		name:'sold out',
 		icon:'icon icon-hanger',
-		bgColor:'#8E44AD'
-	},
-	{
-		name:'all',
-		icon:'icon icon-sox',
 		bgColor:'#DA3C78'
 	},
 	{
-		name:'add',
+		name:'stock up',
+		icon:'icon icon-maximize',
+		bgColor:'#8E44AD'
+	},
+	{
+		name:'add new item',
 		icon:'icon icon-plus',
 		bgColor:'#27ae60'
 	}

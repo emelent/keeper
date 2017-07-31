@@ -29,11 +29,17 @@ export default class AddInventoryItem extends Component{
 
 		return (
 			<div className="add-inventory-item" style={style}>
-				<input ref={(el) => this.txtName = el}
-					type="text" placeholder="Name"/>
-				<input  ref={(el) => this.txtBrand = el}
-					type="text" placeholder="Brand"/>
-				<select  ref={(el) => this.selBrand = el}>
+				<input className="input"
+					ref={(el) => this.txtName = el}
+					type="text" placeholder="Name"
+				/>
+				<input className="input"
+					ref={(el) => this.txtBrand = el}
+					type="text" placeholder="Brand"
+				/>
+				<select className="input"
+					ref={(el) => this.selBrand = el}
+				>
 					<option disabled selected value>Category</option>
 					{
 						categories.map(c => (
@@ -41,18 +47,25 @@ export default class AddInventoryItem extends Component{
 						))
 					}
 				</select>
-				<input  ref={(el) => this.txtQty = el}
+				<input className="input"
+					ref={(el) => this.txtQty = el}
 					placeholder="Quantity"
-					type="number" min="1"/>
-				<input  ref={(el) => this.txtSell = el}
+					type="number" min="1"
+				/>
+				<input className="input"
+					ref={(el) => this.txtSell = el}
 					placeholder="Selling Price(R)"
-					type="number" min="1" step="0.1"/>
-				<input  ref={(el) => this.txtBuy = el}
+					type="number" min="1" step="0.1"
+				/>
+				<input className="input"
+					ref={(el) => this.txtBuy = el}
 					placeholder="Buying Price(R)"
 					type="number" min="1" step="0.1"
 				/>
 
-				<button onClick={this.addItem}>Add</button>
+				<button className="button"
+					onClick={this.addItem}
+				>Add</button>
 			</div>
 		)
 	}
