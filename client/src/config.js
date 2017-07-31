@@ -9,3 +9,4 @@ export const dbVersion = 3
 //sn for store name
 export const snProducts = 'products'
 export const snReceipts = 'receipts'
+export const snUpdateTimes = 'update_times'

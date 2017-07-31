@@ -23,6 +23,9 @@ class Inventory extends Component{
 		this.addItem = this.addItem.bind(this)
 	}
 
+	componentDidMount(){
+		this.props.fetchProducts()
+	}
 	handleTileClick(name){
 		this.setState({modal: name})
 	}

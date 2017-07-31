@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import {
-	withRouter,
 	Switch,
 	Route
 } from 'react-router-dom'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
 
 import {openDb} from '../db'
+import {syncWithExternalDb, clearError} from '../redux/actions/sync'
 
 import TabBar from '../components/tabBar'
 import Purchase from './purchase'
@@ -77,5 +79,13 @@ const styles = {
 		backgroundColor:'orange'
 	}
 }
+const mapStateToProps = (state) => ({
+	sync: state.sync
+})
 
-export default withRouter(App)
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+	syncWithExternalDb,
+	clearError
+}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
