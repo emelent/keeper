@@ -7,7 +7,7 @@ export const intialState = Map({
 	error: null
 })
 
-//inventory action types
+//product action types
 export const actionType = {
 	FETCH_PRODUCTS_PENDING: 'FETCH_PRODUCTS',
 	FETCH_PRODUCTS_FULFILLED: 'FETCH_PRODUCTS_FULFILLED',
@@ -16,7 +16,7 @@ export const actionType = {
 	CLEAR_ERROR: 'CLEAR_ERROR'
 }
 
-//inventory reducer
+//product reducer
 export default (state=intialState, action) => {
 	switch (action.type){
 		case actionType.FETCH_PRODUCTS_PENDING:
