@@ -1,9 +1,9 @@
 import {combineReducers} from 'redux'
 
-import inventory from './inventory'
+import product from './product'
 
 export default combineReducers({
-	inventory
+	product
 })
 
 

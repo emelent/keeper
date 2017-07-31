@@ -7,7 +7,7 @@ import TileMenu from '../components/tileMenu'
 import ProductList from '../components/productList'
 import Modal from '../components/modal'
 import AddInventoryItem from '../components/addInventoryItem'
-import {fetchProducts, clearError} from '../redux/actions/inventory'
+import {fetchProducts, clearError} from '../redux/actions/product'
 
 
 class Inventory extends Component{
@@ -37,7 +37,7 @@ class Inventory extends Component{
 	}
 
 	getModalContent(){
-		const products = this.props.inventory.get('products').toArray()
+		const products = this.props.product.get('products').toArray()
 		switch (this.state.modal){
 			case 'available':
 				return createProductList(
@@ -127,7 +127,7 @@ const createProductList = (products, fields) => (
 
 
 const mapStateToProps = (state) => ({
-	inventory: state.inventory
+	product: state.product
 })
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

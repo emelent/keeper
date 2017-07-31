@@ -5,12 +5,16 @@ import {
 	Route
 } from 'react-router-dom'
 
+import {openDb} from '../db'
+
 import TabBar from '../components/tabBar'
 import Purchase from './purchase'
 import Inventory from './inventory'
 import Analysis from './analysis'
 import Settings from './settings'
 import Page from '../components/page'
+
+openDb()
 
 const UnknownRoute = () => {
 	const content = (
