@@ -1,7 +1,9 @@
-import {Map} from 'immutable'
+import {Map, Set} from 'immutable'
 
 //intial state
 export const initialState = Map({
+	//stores newly added products yet to be sent to api
+	products: Set(),
 	pending: false,
 	error: null
 })
@@ -22,14 +24,17 @@ export default (state=initialState, action) => {
 			return state.set('pending', true)
 
 		case actionType.SYNC_FULFILLED:
-			return state.set('pending', false)
+			return state.merge({
+				pending: false,
+				products: Set()
+			})
 
 		case actionType.SYNC_REJECTED:
 			return state.merge({
 				pending: false,
 				error: action.payload
 			})
-			
+
 		case actionType.CLEAR_ERROR:
 			return state.set('error', null)
 	}
