@@ -27,6 +27,11 @@ var Routes = map[string]Route{
 		Path:   "/products/new",
 		Maker:  handler.NewProductHandler,
 	},
+	"Sync": Route{
+		Method: "POST",
+		Path:   "/sync",
+		Maker:  handler.SyncHandler,
+	},
 	"AllProducts": Route{
 		Method: "GET",
 		Path:   "/products/all",

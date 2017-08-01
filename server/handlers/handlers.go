@@ -54,6 +54,52 @@ func NewProductHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
+//SyncHandler endpoint
+func SyncHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		defer crud.CloseCopy()
+
+		var rawProducts []interface{}
+		if err := json.NewDecoder(r.Body).Decode(&rawProducts); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		products := make([]interface{}, len(rawProducts))
+		for i, raw := range rawProducts {
+			p := mapToProd(raw.(map[string]interface{}))
+			if err := p.OK(); err != nil {
+				http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+				return
+			}
+
+			p.ID = bson.NewObjectId()
+			products[i] = p
+		}
+
+		if err := crud.Insert(productsCollection, products...); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		allRaw, err := crud.FindAll(productsCollection, nil)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		allProducts := make([]models.Product, len(allRaw))
+		for i, raw := range allRaw {
+			allProducts[i] = bsonToProd(raw.(bson.M))
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		if err := json.NewEncoder(w).Encode(&allProducts); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	}
+}
+
 //AllProductsHandler endpoint
 func AllProductsHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -62,16 +108,7 @@ func AllProductsHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) 
 		results, err := crud.FindAll(productsCollection, nil)
 		products := make([]models.Product, len(results))
 		for index, raw := range results {
-			bsonProd := raw.(bson.M)
-			products[index] = models.Product{
-				ID:       bsonProd["_id"].(bson.ObjectId),
-				Name:     bsonProd["name"].(string),
-				Brand:    bsonProd["brand"].(string),
-				Category: bsonProd["category"].(string),
-				Quantity: bsonProd["quantity"].(int),
-				Sell:     bsonProd["sell"].(float64),
-				Buy:      bsonProd["buy"].(float64),
-			}
+			products[index] = bsonToProd(raw.(bson.M))
 		}
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -79,6 +116,30 @@ func AllProductsHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) 
 		}
 
 		jsonEncode(w, products, http.StatusOK)
+	}
+}
+
+func bsonToProd(bsonProd bson.M) models.Product {
+	return models.Product{
+		ID:       bsonProd["_id"].(bson.ObjectId),
+		Name:     bsonProd["name"].(string),
+		Brand:    bsonProd["brand"].(string),
+		Category: bsonProd["category"].(string),
+		Quantity: bsonProd["quantity"].(int),
+		Sell:     bsonProd["sell"].(float64),
+		Buy:      bsonProd["buy"].(float64),
+	}
+}
+
+func mapToProd(mapProd map[string]interface{}) models.Product {
+	return models.Product{
+		ID:       "",
+		Name:     mapProd["name"].(string),
+		Brand:    mapProd["brand"].(string),
+		Category: mapProd["category"].(string),
+		Quantity: int(mapProd["quantity"].(float64)),
+		Sell:     mapProd["sell"].(float64),
+		Buy:      mapProd["buy"].(float64),
 	}
 }
 
