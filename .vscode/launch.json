@@ -10,7 +10,7 @@
             "remotePath": "",
             "port": 2345,
             "host": "127.0.0.1",
-            "program": "${fileDirname}/../server/main.go",
+            "program": "/Users/zero/Documents/code/learn/web/pwa/shopkeeper/server/main.go",
             "env": {},
             "args": [],
             "showLog": true
@@ -23,7 +23,7 @@
             "remotePath": "",
             "port": 2345,
             "host": "127.0.0.1",
-            "program": "${fileDirname}/../server/main.go",
+            "program": "/Users/zero/Documents/code/learn/web/pwa/shopkeeper/server/main.go",
             "env": {},
             "args": [],
             "showLog": true
