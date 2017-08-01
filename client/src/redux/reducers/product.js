@@ -1,8 +1,8 @@
-import {Map, List} from 'immutable'
+import {Map, Set} from 'immutable'
 
 //initial state
 export const intialState = Map({
-	products: List(),
+	products: Set(),
 	pending: false,
 	error: null
 })
@@ -25,7 +25,7 @@ export default (state=intialState, action) => {
 		case actionType.FETCH_PRODUCTS_FULFILLED:
 			return state.merge({
 				pending: false,
-				products: List(action.payload)
+				products: Set(action.payload)
 			})
 
 		case actionType.FETCH_PRODUCTS_REJECTED:
