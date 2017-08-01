@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+	withRouter,
 	Switch,
 	Route
 } from 'react-router-dom'
@@ -88,4 +89,4 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
 	clearError
 }, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))
