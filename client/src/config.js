@@ -10,3 +10,9 @@ export const dbVersion = 3
 export const snProducts = 'products'
 export const snReceipts = 'receipts'
 export const snUpdateTimes = 'update_times'
+
+//request config
+export const jsonHeaders = {
+	'Accept': 'application/json',
+	'Content-Type': 'application/json'
+}
