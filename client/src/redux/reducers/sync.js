@@ -25,7 +25,7 @@ export default (state=initialState, action) => {
 			return state.set('pending', false)
 
 		case actionType.SYNC_REJECTED:
-			return state.merg({
+			return state.merge({
 				pending: false,
 				error: action.payload
 			})
