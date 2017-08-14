@@ -9,6 +9,7 @@ import Modal from '../components/modal'
 import AddInventoryItem from '../components/addInventoryItem'
 import StockUp from '../components/stockUp'
 import {fetchProducts, clearError} from '../redux/actions/product'
+import {createProduct} from '../redux/actions/sync'
 
 
 class Inventory extends Component{
@@ -38,7 +39,11 @@ class Inventory extends Component{
 
 	addItem(item){
 		console.log('Adding =>', item)
-		this.handleModalClose()
+		const {fetchProducts, createProduct} = this.props
+		createProduct(item, () => {
+			fetchProducts()
+			this.handleModalClose()
+		})
 	}
 
 	stockItem(item, qty){
@@ -144,6 +149,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
 	fetchProducts,
+	createProduct,
 	clearError
 }, dispatch)
 
