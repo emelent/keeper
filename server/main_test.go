@@ -21,7 +21,7 @@ import (
 
 var crud *db.CRUD
 
-//Fail messages
+//String constants
 const (
 	invalidContentType = "Invalid Content-Type header."
 	unexpectedResponse = "Unexpected response data."
