@@ -10,10 +10,17 @@ import App from './app'
 
 
 const store = configureStore()
+//sync every 5 min
+const syncTime = 5 * 60 * 1000
 
-// store.dispatch(syncWithExternalDb)
-// fetchProducts()(store.dispatch)
+//perform initial sync
+console.log('performing initial sync')
 syncWithExternalDb()(store.dispatch)
+setInterval(() => {
+	console.log('scheduled sync')
+	syncWithExternalDb()(store.dispatch)
+}, syncTime)
+
 const Root = () => (
 	<Provider store={store}>
 
