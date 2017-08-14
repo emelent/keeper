@@ -54,6 +54,15 @@ func NewProductHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
+//PreflightSyncHandler endpoint
+func PreflightSyncHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		defer crud.CloseCopy()
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+}
+
 //SyncHandler endpoint
 func SyncHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -64,24 +73,24 @@ func SyncHandler(crud *db.CRUD) func(http.ResponseWriter, *http.Request) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		if lenProd := len(rawProducts); lenProd > 0 {
+			products := make([]interface{}, lenProd)
+			for i, raw := range rawProducts {
+				p := mapToProd(raw.(map[string]interface{}))
+				if err := p.OK(); err != nil {
+					http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+					return
+				}
 
-		products := make([]interface{}, len(rawProducts))
-		for i, raw := range rawProducts {
-			p := mapToProd(raw.(map[string]interface{}))
-			if err := p.OK(); err != nil {
-				http.Error(w, err.Error(), http.StatusUnprocessableEntity)
-				return
+				p.ID = bson.NewObjectId()
+				products[i] = p
 			}
 
-			p.ID = bson.NewObjectId()
-			products[i] = p
+			if err := crud.Insert(productsCollection, products...); err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
 		}
-
-		if err := crud.Insert(productsCollection, products...); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
 		allRaw, err := crud.FindAll(productsCollection, nil)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)

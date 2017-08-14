@@ -32,6 +32,11 @@ var Routes = map[string]Route{
 		Path:   "/sync",
 		Maker:  handler.SyncHandler,
 	},
+	"PreflightSync": Route{
+		Method: "OPTIONS",
+		Path:   "/sync",
+		Maker:  handler.PreflightSyncHandler,
+	},
 	"AllProducts": Route{
 		Method: "GET",
 		Path:   "/products/all",
