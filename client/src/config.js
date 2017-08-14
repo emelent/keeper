@@ -11,6 +11,9 @@ export const snProducts = 'products'
 export const snReceipts = 'receipts'
 export const snUpdateTimes = 'update_times'
 
+//new model id's
+export const newProductId = 'NewProduct'
+
 //request config
 export const jsonHeaders = {
 	'Accept': 'application/json',
