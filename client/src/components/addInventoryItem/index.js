@@ -1,7 +1,12 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 
+import {newProductId} from '../../config'
 import './style.css'
+
+const randomString = () => (
+	("" + (new Date()).getTime()) + Math.floor(Math.random() * 10000)
+)
 
 
 export default class AddInventoryItem extends Component{
@@ -19,7 +24,8 @@ export default class AddInventoryItem extends Component{
 			category: this.selBrand.value,
 			quantity: this.txtQty.valueAsNumber,
 			sell: this.txtSell.valueAsNumber,
-			buy: this.txtBuy.valueAsNumber
+			buy: this.txtBuy.valueAsNumber,
+			id: newProductId + randomString()
 		}
 		this.props.onAddClick(newProduct)
 	}
