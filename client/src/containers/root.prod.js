@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {Provider} from 'react-redux'
 import {BrowserRouter as Router} from 'react-router-dom'
 
@@ -13,18 +13,30 @@ const syncTime = 5 * 60 * 1000
 
 //perform initial sync
 syncWithExternalDb()(store.dispatch)
-setInterval(() => {
-	console.log('scheduled sync')
-	syncWithExternalDb()(store.dispatch)
-}, syncTime)
 
-const Root = () => (
-	<Provider store={store}>
+class Root extends Component{
 
-		<Router>
-			<App/>
-		</Router>
-	</Provider>
-)
+	componentDidMount(){
+		this.syncInterval = setInterval(() => {
+			console.log('scheduled sync')
+			syncWithExternalDb()(store.dispatch)
+		}, syncTime)
+	}
+
+	componentWillUnmount(){
+		clearInterval(this.syncInterval)
+	}
+
+	render(){
+
+		return (
+			<Provider store={store}>
+				<Router>
+					<App/>
+				</Router>
+			</Provider>
+		)
+	}
+}
 
 export default Root
